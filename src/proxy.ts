@@ -45,15 +45,18 @@ export async function proxy(request: NextRequest) {
     roleType: typeof session.user.role,
     commissionId: session.user.commissionId
   })
-  if (session.user.role == "STUDENT" ) {
+  if (session.user.role === "STUDENT" && !session.user.email.endsWith("@esp.sn")) {
+    await deleteUser(session.user.id)
 
-    const response = NextResponse.redirect(new URL("/login?error=wrong-role", request.url))
-
-    // Supprimer les cookies de session
-    response.cookies.delete("better-auth.session_token")
-
-    return response
+    // Rediriger directement vers /logout avec un paramètre d'erreur
+    return NextResponse.redirect(new URL("/logout?error=wrong-role", request.url))
   }
+  if (session.user.role === "STUDENT" ) {
+
+    // Rediriger directement vers /logout avec un paramètre d'erreur
+    return NextResponse.redirect(new URL("/logout?error=wrong-role", request.url))
+  }
+
 
 
 
