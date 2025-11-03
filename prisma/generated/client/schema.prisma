@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Role {
+  STUDENT // Front Office - Étudiants
+  CEE // Back Office - Membres de commissions
+  ADMIN // Back Office - Administrateurs
+}
+
+enum Status {
+  PENDING // En attente de validation CEE
+  ACCEPTED // Validé par CEE
+  REJECTED // Rejeté par CEE
+  CANCELLED // Annulé par l'étudiant
+}
+
+// ============================================
+// BETTER AUTH MODELS
+// ============================================
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Role et relations métier
+  role         Role    @default(STUDENT)
+  commissionId String? // Pour les utilisateurs CEE
+
+  // Relations Better Auth
+  sessions Session[]
+  accounts Account[]
+
+  // Relations métier
+  commission   Commission?   @relation(fields: [commissionId], references: [id], onDelete: SetNull)
+  reservations Reservation[]
+
+  @@index([email])
+  @@index([commissionId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, value])
+}
+
+// ============================================
+// BUSINESS MODELS
+// ============================================
+
+model Commission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  color       String   @default("#3b82f6")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  members   User[]
+  locations Location[]
+
+  @@index([name])
+}
+
+model Location {
+  id               String   @id @default(cuid())
+  name             String
+  description      String?
+  maxDurationHours Int? // Durée maximale de réservation en heures (ex: 5 = max 5h)
+  color            String   @default("#3b82f6")
+  textColor        String?
+  commissionId     String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  commission   Commission    @relation(fields: [commissionId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+
+  @@index([commissionId])
+  @@index([name])
+}
+
+model Reservation {
+  id              String   @id @default(uuid())
+  title           String
+  description     String
+  start           DateTime
+  end             DateTime
+  status          Status   @default(PENDING)
+  rejectionReason String? // Raison du rejet par CEE
+  locationId      String
+  userId          String
+  validatedBy     String? // ID du CEE qui a validé/rejeté
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([locationId])
+  @@index([status])
+  @@index([start, end])
+}
