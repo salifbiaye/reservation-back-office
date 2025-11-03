@@ -7,6 +7,7 @@ const publicRoutes = [
   "/",
   "/login",
   // "/register", // ❌ DÉSACTIVÉ - Pas d'inscription publique en back-office
+    "/logout",
   "/verify-otp",
   "/reset-password",
   "/forgot-password"
