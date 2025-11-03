@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
+import {deleteUser} from "@/actions/users";
 
 // Routes publiques (accessibles sans authentification)
 const publicRoutes = [
@@ -43,15 +44,17 @@ export async function proxy(request: NextRequest) {
     roleType: typeof session.user.role,
     commissionId: session.user.commissionId
   })
+  if (session.user.role == "STUDENT" ) {
 
-  // Bloquer les utilisateurs avec rôle STUDENT (créés automatiquement par OAuth)
-  // Les admins doivent créer les comptes avec le bon rôle AVANT que l'utilisateur se connecte
-  if (!["CEE", "ADMIN"].includes(session.user.role || "")) {
-    console.log("❌ Accès refusé - rôle invalide:", session.user.role)
     const response = NextResponse.redirect(new URL("/login?error=wrong-role", request.url))
+
+    // Supprimer les cookies de session
     response.cookies.delete("better-auth.session_token")
+
     return response
   }
+
+
 
   console.log("✅ Accès autorisé pour rôle:", session.user.role)
 
