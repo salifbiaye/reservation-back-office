@@ -1,4 +1,4 @@
-ik,kik8ik,import { PageHeader } from "@/components/page-header"
+import { PageHeader } from "@/components/page-header"
 import { PageHeroSection } from "@/components/page-hero"
 import { Calendar } from "lucide-react"
 import { CalendarDataLoader } from "@/features/calendar/calendar-data-loader"
