@@ -359,3 +359,41 @@ export async function deleteReservation(reservationId: string) {
     return { success: false, error: "Erreur lors de la suppression" }
   }
 }
+
+export async function bulkDeleteReservations(reservationIds: string[]) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    })
+
+    if (!session) {
+      return { success: false, error: "Non authentifié" }
+    }
+
+    // Seuls les ADMIN peuvent supprimer des réservations
+    if (session.user.role !== "ADMIN") {
+      return { success: false, error: "Seuls les administrateurs peuvent supprimer des réservations" }
+    }
+
+    if (!reservationIds || reservationIds.length === 0) {
+      return { success: false, error: "Aucune réservation sélectionnée" }
+    }
+
+    // Supprimer les réservations en masse
+    const result = await db.reservation.deleteMany({
+      where: {
+        id: {
+          in: reservationIds
+        }
+      }
+    })
+
+    revalidatePath("/reservations")
+    revalidatePath("/dashboard")
+
+    return { success: true, count: result.count }
+  } catch (error) {
+    console.error("Error bulk deleting reservations:", error)
+    return { success: false, error: "Erreur lors de la suppression en masse" }
+  }
+}
