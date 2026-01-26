@@ -3,12 +3,10 @@ import { emailOTP } from "better-auth/plugins"
 import { nextCookies } from "better-auth/next-js"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { db } from "@/lib/db"
-import { Resend } from "resend"
+import { sendEmail } from "@/lib/email"
 import { render } from "@react-email/render"
 import OTPEmail from "../../emails/otp-email"
 import bcrypt from "bcryptjs"
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
@@ -46,9 +44,14 @@ export const auth = betterAuth({
       }
     },
     // Fonction pour l'envoi d'email de reset de mot de passe
-    async sendResetPassword({ user, url, token }) {
-      await resend.emails.send({
-        from: "Acme <onboarding@shadowfit-app.space>",
+    async sendResetPassword({ user, url }) {
+      // BACK-OFFICE: Seuls les ADMIN et CEE peuvent réinitialiser leur mot de passe
+      const userRole = (user as any).role
+      if (!["ADMIN", "CEE"].includes(userRole || "")) {
+        throw new Error("Seuls les administrateurs et membres CEE peuvent réinitialiser leur mot de passe sur cette plateforme. Les étudiants doivent utiliser le front-office.")
+      }
+      
+      await sendEmail({
         to: user.email,
         subject: "Réinitialisation de votre mot de passe",
         html: `
@@ -69,6 +72,19 @@ export const auth = betterAuth({
     // Callback après réinitialisation réussie
     async onPasswordReset({ user }) {
       console.log(`Mot de passe réinitialisé pour: ${user.email}`)
+      
+      // Reset le rate limiting après réinitialisation réussie
+      try {
+        const normalizedEmail = user.email.toLowerCase().trim()
+        await db.loginAttempt.deleteMany({
+          where: {
+            email: normalizedEmail
+          }
+        })
+        console.log(`✅ Rate limit reset after password reset: ${normalizedEmail}`)
+      } catch (error) {
+        console.error("Failed to reset rate limit after password reset:", error)
+      }
     },
 
     // Durée de validité du token de reset (1 heure)
@@ -92,7 +108,7 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       otpLength: 6,
-      expiresIn: 600, // 10 minutes
+      expiresIn: 300, // 5 minutes
       allowedAttempts: 3,
       sendVerificationOnSignUp: true,
       overrideDefaultEmailVerification: true,
@@ -102,15 +118,14 @@ export const auth = betterAuth({
         // Les admins et CEE peuvent utiliser n'importe quel email pro
 
         const subjects = {
-          "sign-in": "Votre code de connexion - ESP Réservation Back Office",
-          "email-verification": "Vérifiez votre email - ESP Réservation Back Office",
+          "sign-in": "Votre code de connexion - ESP Réservation",
+          "email-verification": "Vérifiez votre email - ESP Réservation",
           "forget-password": "Réinitialisation de mot de passe"
         }
 
         const html = await render(OTPEmail({ otp, type, email }))
 
-        await resend.emails.send({
-          from: "Acme <onboarding@shadowfit-app.space>",
+        await sendEmail({
           to: email,
           subject: subjects[type] || "Code de vérification",
           html

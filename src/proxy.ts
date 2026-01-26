@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
-import {deleteUser} from "@/actions/users";
+import { getSessionWithCache } from "@/lib/session-cache"
 import {db} from "@/lib/db";
 
 // Routes publiques (accessibles sans authentification)
@@ -17,18 +16,17 @@ const publicRoutes = [
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-
-  // Vérifier la session avec Better Auth
-  const session = await auth.api.getSession({
-    headers: request.headers
-  })
-  if (session && pathname === "/login") {
-    console.log("✅ Utilisateur connecté, redirection depuis /login vers /dashboard")
-    return NextResponse.redirect(new URL("/dashboard", request.url))
-  }
   // Permettre l'accès aux routes publiques
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next()
+  }
+
+  // Vérifier la session avec Better Auth
+  const session = await getSessionWithCache()
+  
+  // Redirection uniquement pour les requêtes GET vers /login
+  if (session && pathname === "/login" && request.method === "GET") {
+    return NextResponse.redirect(new URL("/dashboard", request.url))
   }
 
   // Si pas de session, rediriger vers login
@@ -40,12 +38,6 @@ export async function proxy(request: NextRequest) {
 
 
   // CRITIQUE: Seuls les rôles CEE et ADMIN peuvent accéder au back-office
-  console.log("🔍 Session user:", {
-    email: session.user.email,
-    role: session.user.role,
-    roleType: typeof session.user.role,
-    commissionId: session.user.commissionId
-  })
   if (session.user.role === "STUDENT" && !session.user.email.endsWith("@esp.sn")) {
     await db.user.delete({
       where: { id: session.user.id }
@@ -59,11 +51,6 @@ export async function proxy(request: NextRequest) {
     // Rediriger directement vers /logout avec un paramètre d'erreur
     return NextResponse.redirect(new URL("/logout?error=wrong-role", request.url))
   }
-
-
-
-
-  console.log("✅ Accès autorisé pour rôle:", session.user.role)
 
   return NextResponse.next()
 }

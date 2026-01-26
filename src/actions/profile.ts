@@ -1,11 +1,12 @@
 "use server"
 
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getCachedSession } from "@/lib/session"
 import { db } from "@/lib/db"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
 import { revalidatePath } from "next/cache"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 // Schema pour la mise à jour du profil
 const updateProfileSchema = z.object({
@@ -27,9 +28,7 @@ const changePasswordSchema = z.object({
  * Récupérer le profil de l'utilisateur connecté
  */
 export async function getProfile() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session) {
     return { error: "Non authentifié" }

@@ -1,17 +1,14 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getCachedSession } from "@/lib/session"
 import { getThisMonthRange, getLastMonthRange } from "@/lib/date-helpers"
 
 /**
  * Générer un rapport mensuel (ADMIN uniquement)
  */
 export async function generateMonthlyReport(month?: Date) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -115,9 +112,7 @@ export async function generateMonthlyReport(month?: Date) {
  * Générer un rapport pour une commission (CEE ou ADMIN)
  */
 export async function generateCommissionReport(commissionId: string, month?: Date) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session) {
     return { error: "Non authentifié" }

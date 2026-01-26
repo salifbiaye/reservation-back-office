@@ -1,8 +1,7 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getCachedSession } from "@/lib/session"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { commissionSchema, type CommissionInput } from "@/schemas/commission"
@@ -12,13 +11,13 @@ import {
   buildPaginatedResult,
 } from "@/lib/pagination"
 import { buildSearchCondition, parseSearchParam } from "@/lib/filters"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 export async function getCommissions(params?: {
   searchParams?: URLSearchParams | Record<string, string | string[] | undefined>
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -59,9 +58,7 @@ export async function getCommissions(params?: {
 }
 
 export async function getCommission(id: string) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -114,7 +111,7 @@ export async function createCommission(data: CommissionInput) {
   } catch (error) {
     console.error("Error creating commission:", error)
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     return { success: false, error: "Erreur lors de la création" }
   }
@@ -147,7 +144,7 @@ export async function updateCommission(id: string, data: CommissionInput) {
   } catch (error) {
     console.error("Error updating commission:", error)
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message }
+      return { success: false, error: error.issues[0].message }
     }
     return { success: false, error: "Erreur lors de la mise à jour" }
   }

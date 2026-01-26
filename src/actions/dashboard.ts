@@ -1,8 +1,7 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getCachedSession } from "@/lib/session"
 import {
   getTodayRange,
   getThisWeekRange,
@@ -239,9 +238,7 @@ async function getCEEStats(userId: string, commissionId: string) {
  * Point d'entrée principal - Route vers ADMIN ou CEE stats
  */
 export async function getDashboardStats() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session) {
     return { error: "Non authentifié" }
@@ -280,9 +277,7 @@ export async function getDashboardStats() {
  * Récupérer les données temporelles pour les graphiques (dernier mois, jour par jour)
  */
 export async function getTimeSeriesData() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session) {
     return { error: "Non authentifié" }
@@ -347,9 +342,7 @@ export async function getTimeSeriesData() {
  * Récupérer l'activité récente
  */
 export async function getRecentActivity() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session) {
     return { error: "Non authentifié" }

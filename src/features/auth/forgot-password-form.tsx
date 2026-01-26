@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { forgotPasswordSchema, type ForgotPasswordInput } from "@/lib/validations"
 import { authClient } from "@/lib/auth-client"
+import { checkPasswordResetEligibility } from "@/actions/forgot-password"
 import { useState } from "react"
 import { CheckCircle2 } from "lucide-react"
 
@@ -21,13 +22,22 @@ export function ForgotPasswordForm() {
   })
 
   const onSubmit = async (data: ForgotPasswordInput) => {
+    // Vérifier d'abord si l'utilisateur est éligible
+    const eligibility = await checkPasswordResetEligibility(data.email)
+    
+    if (!eligibility.eligible) {
+      setError("root", { message: eligibility.error || "Erreur lors de la vérification" })
+      return
+    }
+
+    // Si éligible, envoyer l'email de reset
     const { error } = await authClient.forgetPassword({
       email: data.email,
       redirectTo: `${window.location.origin}/reset-password`
     })
 
     if (error) {
-      setError("root", { message: error.message || "Erreur lors de l'envoi" })
+      setError("root", { message: error.message || "Erreur lors de l'envoi de l'email" })
       return
     }
 
@@ -47,6 +57,11 @@ export function ForgotPasswordForm() {
           <p className="text-muted-foreground">
             Consultez votre boîte mail et cliquez sur le lien pour réinitialiser votre mot de passe.
           </p>
+          <div className="mt-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+            <p className="text-sm text-amber-600 dark:text-amber-400">
+              📬 <strong>Astuce :</strong> Si vous ne voyez pas l'email, vérifiez votre dossier spam/courrier indésirable.
+            </p>
+          </div>
         </div>
         <a
           href="/login"

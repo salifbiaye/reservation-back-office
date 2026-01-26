@@ -1,8 +1,7 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getCachedSession } from "@/lib/session"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
@@ -20,18 +19,16 @@ import {
   buildPaginatedResult,
 } from "@/lib/pagination"
 import { buildSearchCondition, parseSearchParam, parseRoleFilter, parseCommissionFilter } from "@/lib/filters"
-import { Resend } from "resend"
+import { sendEmail } from "@/lib/email"
 import { render } from "@react-email/render"
 import WelcomeUserEmail from "../../emails/welcome-user-email"
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 export async function getUsers(params?: {
   searchParams?: URLSearchParams | Record<string, string | string[] | undefined>
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -88,9 +85,7 @@ export async function getUsers(params?: {
 }
 
 export async function getUser(id: string) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -120,9 +115,7 @@ export async function getUser(id: string) {
 }
 
 export async function getCommissionsForSelect() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -216,8 +209,7 @@ export async function createUser(data: CreateUserInput) {
         role: user.role
       }))
 
-      await resend.emails.send({
-        from: "ESP Réservation <onboarding@shadowfit-app.space>",
+      await sendEmail({
         to: user.email,
         subject: "Bienvenue sur ESP Réservation - Vos identifiants de connexion",
         html

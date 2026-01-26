@@ -168,6 +168,16 @@ exports.Prisma.VerificationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.LoginAttemptScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  ipAddress: 'ipAddress',
+  success: 'success',
+  blockedUntil: 'blockedUntil',
+  blockLevel: 'blockLevel',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CommissionScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -236,6 +246,7 @@ exports.Prisma.ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
+  LoginAttempt: 'LoginAttempt',
   Commission: 'Commission',
   Location: 'Location',
   Reservation: 'Reservation'

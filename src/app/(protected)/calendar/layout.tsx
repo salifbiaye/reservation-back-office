@@ -1,41 +1,42 @@
-import { PageHeader } from "@/components/page-header"
-import { CalendarProvider } from "@/features/calendar/calendar-context"
-import { getCalendarData } from "@/actions/calendar"
-import { redirect } from "next/navigation"
-import {PageHeroSection} from "@/components/page-hero";
-import {Calendar} from "lucide-react";
+ik,kik8ik,import { PageHeader } from "@/components/page-header"
+import { PageHeroSection } from "@/components/page-hero"
+import { Calendar } from "lucide-react"
+import { CalendarDataLoader } from "@/features/calendar/calendar-data-loader"
+import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
-export default async function CalendarLayout({
+export default function CalendarLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const result = await getCalendarData()
-
-  if ("error" in result) {
-    return <div>Erreur: {result.error}</div>
-  }
-
   return (
     <>
       <PageHeader />
       <div className="flex-1 space-y-6 p-6">
         <PageHeroSection
-            icon={Calendar}
-            title="Calendrier"
-            description="Visualisez toutes les réservations dans le calendrier"
-
-            visualIcon={Calendar}
+          icon={Calendar}
+          title="Calendrier"
+          description="Visualisez toutes les réservations dans le calendrier"
+          visualIcon={Calendar}
         />
 
-
-        <CalendarProvider
-          locations={result.locations}
-          reservations={result.reservations}
-        >
-          {children}
-        </CalendarProvider>
+        <Suspense fallback={<CalendarSkeleton />}>
+          <CalendarDataLoader>{children}</CalendarDataLoader>
+        </Suspense>
       </div>
     </>
+  )
+}
+
+function CalendarSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-10 w-48" />
+      </div>
+      <Skeleton className="h-[600px] w-full rounded-xl" />
+    </div>
   )
 }

@@ -1,8 +1,7 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getCachedSession } from "@/lib/session"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { locationSchema, type LocationInput } from "@/schemas/location"
@@ -13,13 +12,13 @@ import {
   buildPaginatedResult,
 } from "@/lib/pagination"
 import { buildSearchCondition, parseSearchParam, parseCommissionFilter } from "@/lib/filters"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 export async function getLocations(params?: {
   searchParams?: URLSearchParams | Record<string, string | string[] | undefined>
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -74,9 +73,7 @@ export async function getLocations(params?: {
 }
 
 export async function getLocation(id: string) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session || session.user.role !== "ADMIN") {
     return { error: "Non autorisé" }
@@ -198,9 +195,7 @@ export async function deleteLocation(id: string) {
  * CEE: seulement les locations de sa commission
  */
 export async function getLocationsForSelect() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session) {
     return { error: "Non authentifié" }

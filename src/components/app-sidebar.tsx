@@ -89,8 +89,8 @@ export function AppSidebar() {
   )
 
   return (
-      <Sidebar className="border-r bg-gray-900 dark:bg-muted ">
-        <SidebarHeader className=" dark:border-border bg-gray-900 dark:bg-muted px-6 py-6">
+      <Sidebar variant={"floating"} className="border-r bg-background dark:bg-muted ">
+        <SidebarHeader className=" dark:border-border rounded-t-lg bg-gray-900 dark:bg-muted px-6 py-6">
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:scale-105">
               <Building2 className="h-5 w-5" />
@@ -137,7 +137,7 @@ export function AppSidebar() {
           </SidebarGroup>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-gray-800 dark:border-border px-3 py-4 space-y-2 bg-gray-900 dark:bg-muted">
+        <SidebarFooter className="border-t border-gray-800 rounded-b-lg dark:border-border px-3 py-4 space-y-2 bg-gray-900 dark:bg-muted">
           <SidebarMenu>
             <SidebarMenuItem>
               <UserProfileCard

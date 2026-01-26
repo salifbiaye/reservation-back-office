@@ -1,8 +1,9 @@
 import { PageHeader } from "@/components/page-header"
-import { getReservations } from "@/actions/reservations"
-import { ReservationsContent } from "@/features/reservations/reservations-content"
-import {PageHeroSection} from "@/components/page-hero";
-import {CalendarCheck, Clock, User} from "lucide-react";
+import { ReservationsLoader } from "@/features/reservations/reservations-loader"
+import { PageHeroSection } from "@/components/page-hero"
+import { CalendarCheck } from "lucide-react"
+import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const metadata = {
   title: "Réservations - ESP Réservation Back Office",
@@ -15,25 +16,33 @@ interface PageProps {
 
 export default async function ReservationsPage({ searchParams }: PageProps) {
   const params = await searchParams
-  const result = await getReservations({ searchParams: params })
-
-  if ("error" in result) {
-    return <div>Erreur: {result.error}</div>
-  }
 
   return (
     <>
       <PageHeader />
       <div className="flex-1 space-y-6 p-6">
         <PageHeroSection
-            icon={CalendarCheck}
-            title="Réservations"
-            description=" Gérez et validez les demandes de réservation"
-
-            visualIcon={CalendarCheck}
+          icon={CalendarCheck}
+          title="Réservations"
+          description="Gérez et validez les demandes de réservation"
+          visualIcon={CalendarCheck}
         />
-        <ReservationsContent result={result}/>
+        <Suspense fallback={<TableSkeleton />}>
+          <ReservationsLoader searchParams={params} />
+        </Suspense>
       </div>
     </>
+  )
+}
+
+function TableSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <Skeleton className="h-96 w-full" />
+    </div>
   )
 }

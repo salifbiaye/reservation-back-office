@@ -1,12 +1,13 @@
 "use server"
 
 import { db } from "@/lib/db"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getCachedSession } from "@/lib/session"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { sendReservationAcceptedEmail, sendReservationRejectedEmail } from "@/lib/email"
 import { createReservationSchema, type CreateReservationInput } from "@/schemas/reservation"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 import {
   parsePaginationParams,
   getPaginationSkipTake,
@@ -69,9 +70,7 @@ function buildReservationsWhere(userId: string, userRole: string, filters?: {
 export async function getReservations(params?: {
   searchParams?: URLSearchParams | Record<string, string | string[] | undefined>
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCachedSession()
 
   if (!session) {
     return { error: "Non authentifié" }

@@ -34,6 +34,11 @@ export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
  */
 export type Verification = $Result.DefaultSelection<Prisma.$VerificationPayload>
 /**
+ * Model LoginAttempt
+ * 
+ */
+export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
+/**
  * Model Commission
  * 
  */
@@ -238,6 +243,16 @@ export class PrismaClient<
     * ```
     */
   get verification(): Prisma.VerificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.loginAttempt`: Exposes CRUD operations for the **LoginAttempt** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LoginAttempts
+    * const loginAttempts = await prisma.loginAttempt.findMany()
+    * ```
+    */
+  get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.commission`: Exposes CRUD operations for the **Commission** model.
@@ -713,6 +728,7 @@ export namespace Prisma {
     Session: 'Session',
     Account: 'Account',
     Verification: 'Verification',
+    LoginAttempt: 'LoginAttempt',
     Commission: 'Commission',
     Location: 'Location',
     Reservation: 'Reservation'
@@ -734,7 +750,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "commission" | "location" | "reservation"
+      modelProps: "user" | "session" | "account" | "verification" | "loginAttempt" | "commission" | "location" | "reservation"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1031,6 +1047,80 @@ export namespace Prisma {
           count: {
             args: Prisma.VerificationCountArgs<ExtArgs>
             result: $Utils.Optional<VerificationCountAggregateOutputType> | number
+          }
+        }
+      }
+      LoginAttempt: {
+        payload: Prisma.$LoginAttemptPayload<ExtArgs>
+        fields: Prisma.LoginAttemptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LoginAttemptFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LoginAttemptFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findFirst: {
+            args: Prisma.LoginAttemptFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LoginAttemptFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findMany: {
+            args: Prisma.LoginAttemptFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          create: {
+            args: Prisma.LoginAttemptCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          createMany: {
+            args: Prisma.LoginAttemptCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LoginAttemptCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          delete: {
+            args: Prisma.LoginAttemptDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          update: {
+            args: Prisma.LoginAttemptUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          deleteMany: {
+            args: Prisma.LoginAttemptDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LoginAttemptUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LoginAttemptUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          upsert: {
+            args: Prisma.LoginAttemptUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          aggregate: {
+            args: Prisma.LoginAttemptAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLoginAttempt>
+          }
+          groupBy: {
+            args: Prisma.LoginAttemptGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LoginAttemptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LoginAttemptCountArgs<ExtArgs>
+            result: $Utils.Optional<LoginAttemptCountAggregateOutputType> | number
           }
         }
       }
@@ -1356,6 +1446,7 @@ export namespace Prisma {
     session?: SessionOmit
     account?: AccountOmit
     verification?: VerificationOmit
+    loginAttempt?: LoginAttemptOmit
     commission?: CommissionOmit
     location?: LocationOmit
     reservation?: ReservationOmit
@@ -6041,6 +6132,1061 @@ export namespace Prisma {
 
 
   /**
+   * Model LoginAttempt
+   */
+
+  export type AggregateLoginAttempt = {
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  export type LoginAttemptAvgAggregateOutputType = {
+    blockLevel: number | null
+  }
+
+  export type LoginAttemptSumAggregateOutputType = {
+    blockLevel: number | null
+  }
+
+  export type LoginAttemptMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    ipAddress: string | null
+    success: boolean | null
+    blockedUntil: Date | null
+    blockLevel: number | null
+    createdAt: Date | null
+  }
+
+  export type LoginAttemptMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    ipAddress: string | null
+    success: boolean | null
+    blockedUntil: Date | null
+    blockLevel: number | null
+    createdAt: Date | null
+  }
+
+  export type LoginAttemptCountAggregateOutputType = {
+    id: number
+    email: number
+    ipAddress: number
+    success: number
+    blockedUntil: number
+    blockLevel: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type LoginAttemptAvgAggregateInputType = {
+    blockLevel?: true
+  }
+
+  export type LoginAttemptSumAggregateInputType = {
+    blockLevel?: true
+  }
+
+  export type LoginAttemptMinAggregateInputType = {
+    id?: true
+    email?: true
+    ipAddress?: true
+    success?: true
+    blockedUntil?: true
+    blockLevel?: true
+    createdAt?: true
+  }
+
+  export type LoginAttemptMaxAggregateInputType = {
+    id?: true
+    email?: true
+    ipAddress?: true
+    success?: true
+    blockedUntil?: true
+    blockLevel?: true
+    createdAt?: true
+  }
+
+  export type LoginAttemptCountAggregateInputType = {
+    id?: true
+    email?: true
+    ipAddress?: true
+    success?: true
+    blockedUntil?: true
+    blockLevel?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type LoginAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempt to aggregate.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LoginAttempts
+    **/
+    _count?: true | LoginAttemptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LoginAttemptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LoginAttemptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LoginAttemptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type GetLoginAttemptAggregateType<T extends LoginAttemptAggregateArgs> = {
+        [P in keyof T & keyof AggregateLoginAttempt]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLoginAttempt[P]>
+      : GetScalarType<T[P], AggregateLoginAttempt[P]>
+  }
+
+
+
+
+  export type LoginAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginAttemptWhereInput
+    orderBy?: LoginAttemptOrderByWithAggregationInput | LoginAttemptOrderByWithAggregationInput[]
+    by: LoginAttemptScalarFieldEnum[] | LoginAttemptScalarFieldEnum
+    having?: LoginAttemptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LoginAttemptCountAggregateInputType | true
+    _avg?: LoginAttemptAvgAggregateInputType
+    _sum?: LoginAttemptSumAggregateInputType
+    _min?: LoginAttemptMinAggregateInputType
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type LoginAttemptGroupByOutputType = {
+    id: string
+    email: string
+    ipAddress: string | null
+    success: boolean
+    blockedUntil: Date | null
+    blockLevel: number
+    createdAt: Date
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  type GetLoginAttemptGroupByPayload<T extends LoginAttemptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LoginAttemptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LoginAttemptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+            : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LoginAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    ipAddress?: boolean
+    success?: boolean
+    blockedUntil?: boolean
+    blockLevel?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    ipAddress?: boolean
+    success?: boolean
+    blockedUntil?: boolean
+    blockLevel?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    ipAddress?: boolean
+    success?: boolean
+    blockedUntil?: boolean
+    blockLevel?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectScalar = {
+    id?: boolean
+    email?: boolean
+    ipAddress?: boolean
+    success?: boolean
+    blockedUntil?: boolean
+    blockLevel?: boolean
+    createdAt?: boolean
+  }
+
+  export type LoginAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "ipAddress" | "success" | "blockedUntil" | "blockLevel" | "createdAt", ExtArgs["result"]["loginAttempt"]>
+
+  export type $LoginAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LoginAttempt"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      email: string
+      ipAddress: string | null
+      success: boolean
+      blockedUntil: Date | null
+      blockLevel: number
+      createdAt: Date
+    }, ExtArgs["result"]["loginAttempt"]>
+    composites: {}
+  }
+
+  type LoginAttemptGetPayload<S extends boolean | null | undefined | LoginAttemptDefaultArgs> = $Result.GetResult<Prisma.$LoginAttemptPayload, S>
+
+  type LoginAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LoginAttemptFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LoginAttemptCountAggregateInputType | true
+    }
+
+  export interface LoginAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LoginAttempt'], meta: { name: 'LoginAttempt' } }
+    /**
+     * Find zero or one LoginAttempt that matches the filter.
+     * @param {LoginAttemptFindUniqueArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LoginAttemptFindUniqueArgs>(args: SelectSubset<T, LoginAttemptFindUniqueArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LoginAttempt that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LoginAttemptFindUniqueOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LoginAttemptFindUniqueOrThrowArgs>(args: SelectSubset<T, LoginAttemptFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginAttempt that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LoginAttemptFindFirstArgs>(args?: SelectSubset<T, LoginAttemptFindFirstArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginAttempt that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LoginAttemptFindFirstOrThrowArgs>(args?: SelectSubset<T, LoginAttemptFindFirstOrThrowArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LoginAttempts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany()
+     * 
+     * // Get first 10 LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LoginAttemptFindManyArgs>(args?: SelectSubset<T, LoginAttemptFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LoginAttempt.
+     * @param {LoginAttemptCreateArgs} args - Arguments to create a LoginAttempt.
+     * @example
+     * // Create one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.create({
+     *   data: {
+     *     // ... data to create a LoginAttempt
+     *   }
+     * })
+     * 
+     */
+    create<T extends LoginAttemptCreateArgs>(args: SelectSubset<T, LoginAttemptCreateArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LoginAttempts.
+     * @param {LoginAttemptCreateManyArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LoginAttemptCreateManyArgs>(args?: SelectSubset<T, LoginAttemptCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LoginAttempts and returns the data saved in the database.
+     * @param {LoginAttemptCreateManyAndReturnArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LoginAttempts and only return the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LoginAttemptCreateManyAndReturnArgs>(args?: SelectSubset<T, LoginAttemptCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LoginAttempt.
+     * @param {LoginAttemptDeleteArgs} args - Arguments to delete one LoginAttempt.
+     * @example
+     * // Delete one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.delete({
+     *   where: {
+     *     // ... filter to delete one LoginAttempt
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LoginAttemptDeleteArgs>(args: SelectSubset<T, LoginAttemptDeleteArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LoginAttempt.
+     * @param {LoginAttemptUpdateArgs} args - Arguments to update one LoginAttempt.
+     * @example
+     * // Update one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LoginAttemptUpdateArgs>(args: SelectSubset<T, LoginAttemptUpdateArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LoginAttempts.
+     * @param {LoginAttemptDeleteManyArgs} args - Arguments to filter LoginAttempts to delete.
+     * @example
+     * // Delete a few LoginAttempts
+     * const { count } = await prisma.loginAttempt.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LoginAttemptDeleteManyArgs>(args?: SelectSubset<T, LoginAttemptDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LoginAttemptUpdateManyArgs>(args: SelectSubset<T, LoginAttemptUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginAttempts and returns the data updated in the database.
+     * @param {LoginAttemptUpdateManyAndReturnArgs} args - Arguments to update many LoginAttempts.
+     * @example
+     * // Update many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LoginAttempts and only return the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LoginAttemptUpdateManyAndReturnArgs>(args: SelectSubset<T, LoginAttemptUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LoginAttempt.
+     * @param {LoginAttemptUpsertArgs} args - Arguments to update or create a LoginAttempt.
+     * @example
+     * // Update or create a LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.upsert({
+     *   create: {
+     *     // ... data to create a LoginAttempt
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LoginAttempt we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LoginAttemptUpsertArgs>(args: SelectSubset<T, LoginAttemptUpsertArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptCountArgs} args - Arguments to filter LoginAttempts to count.
+     * @example
+     * // Count the number of LoginAttempts
+     * const count = await prisma.loginAttempt.count({
+     *   where: {
+     *     // ... the filter for the LoginAttempts we want to count
+     *   }
+     * })
+    **/
+    count<T extends LoginAttemptCountArgs>(
+      args?: Subset<T, LoginAttemptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LoginAttemptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LoginAttemptAggregateArgs>(args: Subset<T, LoginAttemptAggregateArgs>): Prisma.PrismaPromise<GetLoginAttemptAggregateType<T>>
+
+    /**
+     * Group by LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LoginAttemptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LoginAttemptGroupByArgs['orderBy'] }
+        : { orderBy?: LoginAttemptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LoginAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLoginAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LoginAttempt model
+   */
+  readonly fields: LoginAttemptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LoginAttempt.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LoginAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LoginAttempt model
+   */
+  interface LoginAttemptFieldRefs {
+    readonly id: FieldRef<"LoginAttempt", 'String'>
+    readonly email: FieldRef<"LoginAttempt", 'String'>
+    readonly ipAddress: FieldRef<"LoginAttempt", 'String'>
+    readonly success: FieldRef<"LoginAttempt", 'Boolean'>
+    readonly blockedUntil: FieldRef<"LoginAttempt", 'DateTime'>
+    readonly blockLevel: FieldRef<"LoginAttempt", 'Int'>
+    readonly createdAt: FieldRef<"LoginAttempt", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LoginAttempt findUnique
+   */
+  export type LoginAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findUniqueOrThrow
+   */
+  export type LoginAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findFirst
+   */
+  export type LoginAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findFirstOrThrow
+   */
+  export type LoginAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findMany
+   */
+  export type LoginAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempts to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt create
+   */
+  export type LoginAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data needed to create a LoginAttempt.
+     */
+    data: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+  }
+
+  /**
+   * LoginAttempt createMany
+   */
+  export type LoginAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LoginAttempt createManyAndReturn
+   */
+  export type LoginAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LoginAttempt update
+   */
+  export type LoginAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data needed to update a LoginAttempt.
+     */
+    data: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+    /**
+     * Choose, which LoginAttempt to update.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt updateMany
+   */
+  export type LoginAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LoginAttempts.
+     */
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginAttempts to update
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt updateManyAndReturn
+   */
+  export type LoginAttemptUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to update LoginAttempts.
+     */
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginAttempts to update
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt upsert
+   */
+  export type LoginAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The filter to search for the LoginAttempt to update in case it exists.
+     */
+    where: LoginAttemptWhereUniqueInput
+    /**
+     * In case the LoginAttempt found by the `where` argument doesn't exist, create a new LoginAttempt with this data.
+     */
+    create: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+    /**
+     * In case the LoginAttempt was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+  }
+
+  /**
+   * LoginAttempt delete
+   */
+  export type LoginAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter which LoginAttempt to delete.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt deleteMany
+   */
+  export type LoginAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempts to delete
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt without action
+   */
+  export type LoginAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Commission
    */
 
@@ -8503,7 +9649,7 @@ export namespace Prisma {
   export type ReservationGroupByOutputType = {
     id: string
     title: string
-    description: string
+    description: string | null
     start: Date
     end: Date
     status: $Enums.Status
@@ -8621,7 +9767,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
-      description: string
+      description: string | null
       start: Date
       end: Date
       status: $Enums.Status
@@ -9556,6 +10702,19 @@ export namespace Prisma {
   export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+  export const LoginAttemptScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    ipAddress: 'ipAddress',
+    success: 'success',
+    blockedUntil: 'blockedUntil',
+    blockLevel: 'blockLevel',
+    createdAt: 'createdAt'
+  };
+
+  export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
   export const CommissionScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -10032,6 +11191,70 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Verification"> | Date | string
   }
 
+  export type LoginAttemptWhereInput = {
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    id?: StringFilter<"LoginAttempt"> | string
+    email?: StringFilter<"LoginAttempt"> | string
+    ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
+    success?: BoolFilter<"LoginAttempt"> | boolean
+    blockedUntil?: DateTimeNullableFilter<"LoginAttempt"> | Date | string | null
+    blockLevel?: IntFilter<"LoginAttempt"> | number
+    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+  }
+
+  export type LoginAttemptOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    success?: SortOrder
+    blockedUntil?: SortOrderInput | SortOrder
+    blockLevel?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    email?: StringFilter<"LoginAttempt"> | string
+    ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
+    success?: BoolFilter<"LoginAttempt"> | boolean
+    blockedUntil?: DateTimeNullableFilter<"LoginAttempt"> | Date | string | null
+    blockLevel?: IntFilter<"LoginAttempt"> | number
+    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+  }, "id">
+
+  export type LoginAttemptOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    success?: SortOrder
+    blockedUntil?: SortOrderInput | SortOrder
+    blockLevel?: SortOrder
+    createdAt?: SortOrder
+    _count?: LoginAttemptCountOrderByAggregateInput
+    _avg?: LoginAttemptAvgOrderByAggregateInput
+    _max?: LoginAttemptMaxOrderByAggregateInput
+    _min?: LoginAttemptMinOrderByAggregateInput
+    _sum?: LoginAttemptSumOrderByAggregateInput
+  }
+
+  export type LoginAttemptScalarWhereWithAggregatesInput = {
+    AND?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    OR?: LoginAttemptScalarWhereWithAggregatesInput[]
+    NOT?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"LoginAttempt"> | string
+    email?: StringWithAggregatesFilter<"LoginAttempt"> | string
+    ipAddress?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
+    success?: BoolWithAggregatesFilter<"LoginAttempt"> | boolean
+    blockedUntil?: DateTimeNullableWithAggregatesFilter<"LoginAttempt"> | Date | string | null
+    blockLevel?: IntWithAggregatesFilter<"LoginAttempt"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
+  }
+
   export type CommissionWhereInput = {
     AND?: CommissionWhereInput | CommissionWhereInput[]
     OR?: CommissionWhereInput[]
@@ -10181,7 +11404,7 @@ export namespace Prisma {
     NOT?: ReservationWhereInput | ReservationWhereInput[]
     id?: StringFilter<"Reservation"> | string
     title?: StringFilter<"Reservation"> | string
-    description?: StringFilter<"Reservation"> | string
+    description?: StringNullableFilter<"Reservation"> | string | null
     start?: DateTimeFilter<"Reservation"> | Date | string
     end?: DateTimeFilter<"Reservation"> | Date | string
     status?: EnumStatusFilter<"Reservation"> | $Enums.Status
@@ -10198,7 +11421,7 @@ export namespace Prisma {
   export type ReservationOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrder
+    description?: SortOrderInput | SortOrder
     start?: SortOrder
     end?: SortOrder
     status?: SortOrder
@@ -10218,7 +11441,7 @@ export namespace Prisma {
     OR?: ReservationWhereInput[]
     NOT?: ReservationWhereInput | ReservationWhereInput[]
     title?: StringFilter<"Reservation"> | string
-    description?: StringFilter<"Reservation"> | string
+    description?: StringNullableFilter<"Reservation"> | string | null
     start?: DateTimeFilter<"Reservation"> | Date | string
     end?: DateTimeFilter<"Reservation"> | Date | string
     status?: EnumStatusFilter<"Reservation"> | $Enums.Status
@@ -10235,7 +11458,7 @@ export namespace Prisma {
   export type ReservationOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
-    description?: SortOrder
+    description?: SortOrderInput | SortOrder
     start?: SortOrder
     end?: SortOrder
     status?: SortOrder
@@ -10256,7 +11479,7 @@ export namespace Prisma {
     NOT?: ReservationScalarWhereWithAggregatesInput | ReservationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Reservation"> | string
     title?: StringWithAggregatesFilter<"Reservation"> | string
-    description?: StringWithAggregatesFilter<"Reservation"> | string
+    description?: StringNullableWithAggregatesFilter<"Reservation"> | string | null
     start?: DateTimeWithAggregatesFilter<"Reservation"> | Date | string
     end?: DateTimeWithAggregatesFilter<"Reservation"> | Date | string
     status?: EnumStatusWithAggregatesFilter<"Reservation"> | $Enums.Status
@@ -10613,6 +11836,76 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type LoginAttemptCreateInput = {
+    id?: string
+    email: string
+    ipAddress?: string | null
+    success?: boolean
+    blockedUntil?: Date | string | null
+    blockLevel?: number
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUncheckedCreateInput = {
+    id?: string
+    email: string
+    ipAddress?: string | null
+    success?: boolean
+    blockedUntil?: Date | string | null
+    blockLevel?: number
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    success?: BoolFieldUpdateOperationsInput | boolean
+    blockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockLevel?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    success?: BoolFieldUpdateOperationsInput | boolean
+    blockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockLevel?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptCreateManyInput = {
+    id?: string
+    email: string
+    ipAddress?: string | null
+    success?: boolean
+    blockedUntil?: Date | string | null
+    blockLevel?: number
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    success?: BoolFieldUpdateOperationsInput | boolean
+    blockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockLevel?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    success?: BoolFieldUpdateOperationsInput | boolean
+    blockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockLevel?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CommissionCreateInput = {
     id?: string
     name: string
@@ -10774,7 +12067,7 @@ export namespace Prisma {
   export type ReservationCreateInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -10789,7 +12082,7 @@ export namespace Prisma {
   export type ReservationUncheckedCreateInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -10804,7 +12097,7 @@ export namespace Prisma {
   export type ReservationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -10819,7 +12112,7 @@ export namespace Prisma {
   export type ReservationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -10834,7 +12127,7 @@ export namespace Prisma {
   export type ReservationCreateManyInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -10849,7 +12142,7 @@ export namespace Prisma {
   export type ReservationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -10862,7 +12155,7 @@ export namespace Prisma {
   export type ReservationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -11217,6 +12510,71 @@ export namespace Prisma {
     expiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type LoginAttemptCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    ipAddress?: SortOrder
+    success?: SortOrder
+    blockedUntil?: SortOrder
+    blockLevel?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptAvgOrderByAggregateInput = {
+    blockLevel?: SortOrder
+  }
+
+  export type LoginAttemptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    ipAddress?: SortOrder
+    success?: SortOrder
+    blockedUntil?: SortOrder
+    blockLevel?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    ipAddress?: SortOrder
+    success?: SortOrder
+    blockedUntil?: SortOrder
+    blockLevel?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptSumOrderByAggregateInput = {
+    blockLevel?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type UserListRelationFilter = {
@@ -11603,6 +12961,14 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserCreateNestedManyWithoutCommissionInput = {
     create?: XOR<UserCreateWithoutCommissionInput, UserUncheckedCreateWithoutCommissionInput> | UserCreateWithoutCommissionInput[] | UserUncheckedCreateWithoutCommissionInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCommissionInput | UserCreateOrConnectWithoutCommissionInput[]
@@ -11947,6 +13313,33 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -12089,7 +13482,7 @@ export namespace Prisma {
   export type ReservationCreateWithoutUserInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -12103,7 +13496,7 @@ export namespace Prisma {
   export type ReservationUncheckedCreateWithoutUserInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -12242,7 +13635,7 @@ export namespace Prisma {
     NOT?: ReservationScalarWhereInput | ReservationScalarWhereInput[]
     id?: StringFilter<"Reservation"> | string
     title?: StringFilter<"Reservation"> | string
-    description?: StringFilter<"Reservation"> | string
+    description?: StringNullableFilter<"Reservation"> | string | null
     start?: DateTimeFilter<"Reservation"> | Date | string
     end?: DateTimeFilter<"Reservation"> | Date | string
     status?: EnumStatusFilter<"Reservation"> | $Enums.Status
@@ -12560,7 +13953,7 @@ export namespace Prisma {
   export type ReservationCreateWithoutLocationInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -12574,7 +13967,7 @@ export namespace Prisma {
   export type ReservationUncheckedCreateWithoutLocationInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -12806,7 +14199,7 @@ export namespace Prisma {
   export type ReservationCreateManyUserInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -12895,7 +14288,7 @@ export namespace Prisma {
   export type ReservationUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -12909,7 +14302,7 @@ export namespace Prisma {
   export type ReservationUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -12923,7 +14316,7 @@ export namespace Prisma {
   export type ReservationUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -13033,7 +14426,7 @@ export namespace Prisma {
   export type ReservationCreateManyLocationInput = {
     id?: string
     title: string
-    description: string
+    description?: string | null
     start: Date | string
     end: Date | string
     status?: $Enums.Status
@@ -13047,7 +14440,7 @@ export namespace Prisma {
   export type ReservationUpdateWithoutLocationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -13061,7 +14454,7 @@ export namespace Prisma {
   export type ReservationUncheckedUpdateWithoutLocationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -13075,7 +14468,7 @@ export namespace Prisma {
   export type ReservationUncheckedUpdateManyWithoutLocationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     start?: DateTimeFieldUpdateOperationsInput | Date | string
     end?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status

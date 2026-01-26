@@ -1,11 +1,12 @@
 import { PageHeader } from "@/components/page-header"
-import { getLocations } from "@/actions/locations"
-import { LocationsContent } from "@/features/locations/locations-content"
-import {PageHeroSection} from "@/components/page-hero";
-import {Locate, MapPin} from "lucide-react";
+import { LocationsLoader } from "@/features/locations/locations-loader"
+import { PageHeroSection } from "@/components/page-hero"
+import { MapPin } from "lucide-react"
+import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const metadata = {
-  title: "Lieux - ESP Réservation Back Office",
+  title: "Lieux - ESP Réservation ",
   description: "Gestion des lieux de réservation",
 }
 
@@ -15,25 +16,33 @@ interface PageProps {
 
 export default async function LocationsPage({ searchParams }: PageProps) {
   const params = await searchParams
-  const result = await getLocations({ searchParams: params })
-
-  if ("error" in result) {
-    return <div>Erreur: {result.error}</div>
-  }
 
   return (
     <>
       <PageHeader />
       <div className="flex-1 space-y-6 p-6">
         <PageHeroSection
-            icon={MapPin}
-            title="Lieux"
-            description="Gérez les lieux disponibles pour les réservations"
-
-            visualIcon={MapPin}
+          icon={MapPin}
+          title="Lieux"
+          description="Gérez les lieux disponibles pour les réservations"
+          visualIcon={MapPin}
         />
-      <LocationsContent result={result} />
+        <Suspense fallback={<TableSkeleton />}>
+          <LocationsLoader searchParams={params} />
+        </Suspense>
       </div>
     </>
+  )
+}
+
+function TableSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <Skeleton className="h-96 w-full" />
+    </div>
   )
 }

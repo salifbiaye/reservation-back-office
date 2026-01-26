@@ -43,7 +43,7 @@ export default function WelcomeUserEmail({ name, email, password, role }: Welcom
             <Heading style={h1}>🎉 Bienvenue {name}!</Heading>
 
             <Text style={text}>
-              Votre compte a été créé avec succès sur la plateforme ESP Réservation Back Office.
+              Votre compte a été créé avec succès sur la plateforme ESP Réservation.
             </Text>
 
             <Text style={text}>

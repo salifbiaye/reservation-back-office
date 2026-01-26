@@ -1,8 +1,9 @@
 import { PageHeader } from "@/components/page-header"
-import { getUsers } from "@/actions/users"
-import { UsersContent } from "@/features/users/users-content"
-import {PageHeroSection} from "@/components/page-hero";
-import {Clock, Users2} from "lucide-react";
+import { UsersLoader } from "@/features/users/users-loader"
+import { PageHeroSection } from "@/components/page-hero"
+import { Users2 } from "lucide-react"
+import { Suspense } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const metadata = {
   title: "Utilisateurs - ESP Réservation Back Office",
@@ -15,26 +16,34 @@ interface PageProps {
 
 export default async function UsersPage({ searchParams }: PageProps) {
   const params = await searchParams
-  const result = await getUsers({ searchParams: params })
-
-  if ("error" in result) {
-    return <div>Erreur: {result.error}</div>
-  }
 
   return (
     <>
       <PageHeader />
       <div className="flex-1 space-y-6 p-6">
         <PageHeroSection
-            icon={Users2}
-            title="Utilisateurs"
-            description="Gérez les rôles et permissions des utilisateurs"
-
-            visualIcon={Users2}
+          icon={Users2}
+          title="Utilisateurs"
+          description="Gérez les rôles et permissions des utilisateurs"
+          visualIcon={Users2}
         />
 
-        <UsersContent result={result}/>
+        <Suspense fallback={<TableSkeleton />}>
+          <UsersLoader searchParams={params} />
+        </Suspense>
       </div>
     </>
+  )
+}
+
+function TableSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <Skeleton className="h-96 w-full" />
+    </div>
   )
 }

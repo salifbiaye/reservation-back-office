@@ -105,6 +105,22 @@ model Verification {
   @@unique([identifier, value])
 }
 
+model LoginAttempt {
+  id           String    @id @default(cuid())
+  email        String
+  ipAddress    String?
+  success      Boolean   @default(false)
+  blockedUntil DateTime? // Temps de fin du blocage
+  blockLevel   Int       @default(0) // 0=pas bloqué, 1=10min, 2=30min
+  createdAt    DateTime  @default(now())
+
+  // Index composites pour requêtes rapides
+  @@index([email, createdAt])
+  @@index([ipAddress, createdAt])
+  @@index([email, blockedUntil])
+  @@index([ipAddress, blockedUntil])
+}
+
 // ============================================
 // BUSINESS MODELS
 // ============================================
