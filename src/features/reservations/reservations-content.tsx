@@ -8,8 +8,11 @@ import { DataSearch } from "@/components/data-search"
 import { DataFilter } from "@/components/data-filter"
 import { DataPagination } from "@/components/data-pagination"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
+import { Plus, Trash2 } from "lucide-react"
 import { ReservationDetailsDialog } from "./reservation-details-dialog"
 import {
   AcceptReservationModal,
@@ -17,8 +20,8 @@ import {
   CreateReservationModal,
   DeleteReservationModal
 } from "./reservations-modals"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { bulkDeleteReservations } from "@/actions/reservations"
+import { toast } from "sonner"
 
 interface Reservation {
   id: string
@@ -74,11 +77,53 @@ export function ReservationsContent({ result }: ReservationsContentProps) {
   const [reservationToAccept, setReservationToAccept] = useState<Reservation | null>(null)
   const [reservationToReject, setReservationToReject] = useState<Reservation | null>(null)
   const [reservationToDelete, setReservationToDelete] = useState<Reservation | null>(null)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const isAdmin = session?.user?.role === "ADMIN"
 
   const handleRefresh = () => {
     router.refresh()
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(new Set(result.data.map(r => r.id)))
+    } else {
+      setSelectedIds(new Set())
+    }
+  }
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    const newSelected = new Set(selectedIds)
+    if (checked) {
+      newSelected.add(id)
+    } else {
+      newSelected.delete(id)
+    }
+    setSelectedIds(newSelected)
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return
+
+    const confirmed = confirm(
+      `Êtes-vous sûr de vouloir supprimer ${selectedIds.size} réservation(s) ?\n\nCette action est irréversible.`
+    )
+
+    if (!confirmed) return
+
+    setIsDeleting(true)
+    const deleteResult = await bulkDeleteReservations(Array.from(selectedIds))
+    setIsDeleting(false)
+
+    if (deleteResult.success) {
+      toast.success(`${deleteResult.count} réservation(s) supprimée(s) avec succès`)
+      setSelectedIds(new Set())
+      handleRefresh()
+    } else {
+      toast.error(deleteResult.error || "Erreur lors de la suppression")
+    }
   }
 
   const handleAccept = (reservation: Reservation) => {
@@ -97,6 +142,24 @@ export function ReservationsContent({ result }: ReservationsContentProps) {
   }
 
   const columns: ColumnDef<Reservation>[] = [
+    ...(isAdmin ? [{
+      key: "select" as const,
+      label: (
+        <Checkbox
+          checked={selectedIds.size === result.data.length && result.data.length > 0}
+          onCheckedChange={handleSelectAll}
+          aria-label="Tout sélectionner"
+        />
+      ),
+      render: (_: any, item: Reservation) => (
+        <Checkbox
+          checked={selectedIds.has(item.id)}
+          onCheckedChange={(checked) => handleSelectOne(item.id, checked as boolean)}
+          aria-label={`Sélectionner ${item.title}`}
+        />
+      ),
+      className: "w-12",
+    }] : []),
     {
       key: "title",
       label: "Titre",
@@ -173,6 +236,24 @@ export function ReservationsContent({ result }: ReservationsContentProps) {
   return (
     <div className="flex-1 space-y-6 p-6">
       <div className="flex items-center justify-between">
+        {isAdmin && selectedIds.size > 0 ? (
+          <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+            <span className="text-sm text-muted-foreground">
+              {selectedIds.size} réservation(s) sélectionnée(s)
+            </span>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleBulkDelete}
+              disabled={isDeleting}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              {isDeleting ? "Suppression..." : "Supprimer la sélection"}
+            </Button>
+          </div>
+        ) : (
+          <div />
+        )}
 
         <Button onClick={() => setCreateModalOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />

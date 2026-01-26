@@ -29,9 +29,9 @@ export interface ColumnDef<T = any> {
   key: string
 
   /**
-   * Label de la colonne
+   * Label de la colonne (peut être un string ou un ReactNode pour les cas spéciaux comme les checkboxes)
    */
-  label: string
+  label: string | ReactNode
 
   /**
    * Fonction de rendu personnalisé
