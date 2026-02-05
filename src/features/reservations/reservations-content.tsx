@@ -235,29 +235,30 @@ export function ReservationsContent({ result }: ReservationsContentProps) {
 
   return (
     <div className="flex-1 space-y-6 p-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {isAdmin && selectedIds.size > 0 ? (
-          <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 bg-muted rounded-lg">
             <span className="text-sm text-muted-foreground">
-              {selectedIds.size} réservation(s) sélectionnée(s)
+              {selectedIds.size} sélectionnée(s)
             </span>
             <Button
               variant="destructive"
               size="sm"
               onClick={handleBulkDelete}
               disabled={isDeleting}
+              className="w-full sm:w-auto"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              {isDeleting ? "Suppression..." : "Supprimer la sélection"}
+              {isDeleting ? "Suppression..." : "Supprimer"}
             </Button>
           </div>
         ) : (
           <div />
         )}
 
-        <Button onClick={() => setCreateModalOpen(true)}>
+        <Button onClick={() => setCreateModalOpen(true)} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
-          Créer une réservation
+          <span className="sm:inline">Nouvelle réservation</span>
         </Button>
       </div>
 

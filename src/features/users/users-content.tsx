@@ -182,10 +182,10 @@ export function UsersContent({ result }: UsersContentProps) {
 
   return (
       <div className="flex-1 space-y-6 p-6">
-        <div className="flex items-center justify-between">
-          <Button onClick={() => setCreateModalOpen(true)}>
+        <div className="flex items-center justify-end">
+          <Button onClick={() => setCreateModalOpen(true)} className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
-            Nouveau utilisateur
+            <span>Nouvel utilisateur</span>
           </Button>
         </div>
 

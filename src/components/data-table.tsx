@@ -264,18 +264,34 @@ export function DataTable<T extends Record<string, any>>({
                       </div>
                     ))}
                     {hasActions && visibleActions.length > 0 && (
-                      <div className="flex gap-2 pt-2 border-t border-border/50">
-                        {visibleActions.map((action, actionIndex) => (
-                          <Button
-                            key={actionIndex}
-                            variant={action.variant === "destructive" ? "destructive" : "secondary"}
-                            size="sm"
-                            className="flex-1 text-xs"
-                            onClick={() => action.onClick(item)}
-                          >
-                            {action.label}
-                          </Button>
-                        ))}
+                      <div className="flex justify-end pt-2 border-t border-border/50">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Actions</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {visibleActions.map((action, actionIndex) => (
+                              <DropdownMenuItem
+                                key={actionIndex}
+                                onClick={() => action.onClick(item)}
+                                className={
+                                  action.variant === "destructive"
+                                    ? "text-destructive focus:text-destructive"
+                                    : ""
+                                }
+                              >
+                                {action.label}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     )}
                   </CardContent>
