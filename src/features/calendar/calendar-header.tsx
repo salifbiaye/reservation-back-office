@@ -7,6 +7,7 @@ import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { useCalendar } from "./calendar-context"
 import { LocationSelect } from "./location-select"
+import { useIsMobile } from "@/hooks/use-media-query"
 import type { CalendarView } from "./calendar-context"
 
 interface CalendarHeaderProps {
@@ -15,13 +16,16 @@ interface CalendarHeaderProps {
 
 export function CalendarHeader({ view }: CalendarHeaderProps) {
   const { selectedDate, setSelectedDate } = useCalendar()
+  const isMobile = useIsMobile()
 
   const goToPrevious = () => {
     const newDate = new Date(selectedDate)
     if (view === "day") {
       newDate.setDate(newDate.getDate() - 1)
     } else if (view === "week") {
-      newDate.setDate(newDate.getDate() - 7)
+      // En mobile, la vue semaine affiche 3 jours, donc naviguer par 1 jour
+      // En desktop, afficher 7 jours, donc naviguer par 7 jours
+      newDate.setDate(newDate.getDate() - (isMobile ? 1 : 7))
     } else if (view === "month") {
       newDate.setMonth(newDate.getMonth() - 1)
     } else if (view === "year") {
@@ -35,7 +39,9 @@ export function CalendarHeader({ view }: CalendarHeaderProps) {
     if (view === "day") {
       newDate.setDate(newDate.getDate() + 1)
     } else if (view === "week") {
-      newDate.setDate(newDate.getDate() + 7)
+      // En mobile, la vue semaine affiche 3 jours, donc naviguer par 1 jour
+      // En desktop, afficher 7 jours, donc naviguer par 7 jours
+      newDate.setDate(newDate.getDate() + (isMobile ? 1 : 7))
     } else if (view === "month") {
       newDate.setMonth(newDate.getMonth() + 1)
     } else if (view === "year") {
