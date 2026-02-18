@@ -22,11 +22,12 @@ async function getClientIp(): Promise<string | null> {
 }
 
 /**
- * Vérifie si email ou IP est actuellement bloqué
+ * Vérifie si l'email est actuellement bloqué
+ * Note: Le blocage est uniquement par email pour éviter de bloquer
+ * tous les utilisateurs sur un réseau partagé (ex: wifi universitaire)
  * Retourne: { blocked: boolean, remainingTime?: number, reason?: string }
  */
 export async function checkRateLimit(email: string) {
-  const ipAddress = await getClientIp()
   const now = new Date()
 
   // Normaliser l'email (lowercase, trim)
@@ -51,28 +52,7 @@ export async function checkRateLimit(email: string) {
     }
   }
 
-  // Chercher le dernier blocage actif pour cette IP
-  if (ipAddress) {
-    const ipBlock = await db.loginAttempt.findFirst({
-      where: {
-        ipAddress,
-        blockedUntil: { gte: now }
-      },
-      orderBy: { createdAt: "desc" }
-    })
-
-    if (ipBlock) {
-      const remainingMs = ipBlock.blockedUntil!.getTime() - now.getTime()
-      return {
-        blocked: true,
-        remainingTime: Math.ceil(remainingMs / 1000),
-        reason: "ip",
-        blockLevel: ipBlock.blockLevel
-      }
-    }
-  }
-
-  // Compter les tentatives récentes (dernière heure) pour email
+  // Compter les tentatives récentes (dernière heure) pour email uniquement
   const recentEmailAttempts = await db.loginAttempt.count({
     where: {
       email: normalizedEmail,
@@ -84,31 +64,15 @@ export async function checkRateLimit(email: string) {
     }
   })
 
-  // Compter les tentatives récentes pour IP
-  let recentIpAttempts = 0
-  if (ipAddress) {
-    recentIpAttempts = await db.loginAttempt.count({
-      where: {
-        ipAddress,
-        success: false,
-        blockedUntil: null,
-        createdAt: {
-          gte: new Date(now.getTime() - 60 * 60 * 1000)
-        }
-      }
-    })
-  }
-
   return {
     blocked: false,
-    emailAttempts: recentEmailAttempts,
-    ipAttempts: recentIpAttempts
+    emailAttempts: recentEmailAttempts
   }
 }
 
 /**
  * Enregistre une tentative de login (succès ou échec)
- * Si échec et MAX_ATTEMPTS atteint → créer blocage
+ * Si échec et MAX_ATTEMPTS atteint → créer blocage par email uniquement
  */
 export async function recordLoginAttempt(
   email: string,
@@ -120,14 +84,11 @@ export async function recordLoginAttempt(
   // Normaliser l'email
   const normalizedEmail = email.toLowerCase().trim()
 
-  // Si succès → reset tous les blocages et tentatives pour cet email/IP
+  // Si succès → reset tous les blocages et tentatives pour cet email uniquement
   if (success) {
     await db.loginAttempt.deleteMany({
       where: {
-        OR: [
-          { email: normalizedEmail },
-          ...(ipAddress ? [{ ipAddress }] : [])
-        ]
+        email: normalizedEmail
       }
     })
 
@@ -135,7 +96,7 @@ export async function recordLoginAttempt(
     await db.loginAttempt.create({
       data: {
         email: normalizedEmail,
-        ipAddress,
+        ipAddress, // On garde l'IP pour les logs/audits
         success: true
       }
     })
@@ -152,19 +113,18 @@ export async function recordLoginAttempt(
   }
 
   const emailAttempts = rateCheck.emailAttempts || 0
-  const ipAttempts = rateCheck.ipAttempts || 0
 
   // Créer l'entrée d'échec
   await db.loginAttempt.create({
     data: {
       email: normalizedEmail,
-      ipAddress,
+      ipAddress, // On garde l'IP pour les logs/audits
       success: false
     }
   })
 
-  // Si MAX_ATTEMPTS atteint → créer blocage
-  if (emailAttempts + 1 >= MAX_ATTEMPTS || ipAttempts + 1 >= MAX_ATTEMPTS) {
+  // Si MAX_ATTEMPTS atteint → créer blocage par email
+  if (emailAttempts + 1 >= MAX_ATTEMPTS) {
     // Déterminer le niveau de blocage (1er ou 2ème)
     const lastBlock = await db.loginAttempt.findFirst({
       where: {
@@ -190,7 +150,7 @@ export async function recordLoginAttempt(
     await db.loginAttempt.create({
       data: {
         email: normalizedEmail,
-        ipAddress,
+        ipAddress, // On garde l'IP pour les logs/audits
         success: false,
         blockedUntil,
         blockLevel: Math.min(blockLevel, 2) // Cap à 2 (30min max)
@@ -213,15 +173,12 @@ export async function recordLoginAttempt(
  * Reset complet des tentatives (appelé après login Google réussi)
  */
 export async function resetLoginAttempts(email: string) {
-  const ipAddress = await getClientIp()
   const normalizedEmail = email.toLowerCase().trim()
 
+  // Reset uniquement par email, pas par IP
   await db.loginAttempt.deleteMany({
     where: {
-      OR: [
-        { email: normalizedEmail },
-        ...(ipAddress ? [{ ipAddress }] : [])
-      ]
+      email: normalizedEmail
     }
   })
 

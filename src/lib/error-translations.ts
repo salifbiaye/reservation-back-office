@@ -5,11 +5,11 @@ export function translateAuthError(errorMessage: string | undefined): string {
   if (!errorMessage) return "Une erreur est survenue"
 
   const translations: Record<string, string> = {
-    // Erreurs de connexion
+    // Erreurs de connexion - IMPORTANT: messages identiques pour éviter l'énumération d'utilisateurs
     "Invalid email or password": "Email ou mot de passe incorrect",
-    "Invalid credentials": "Identifiants incorrects",
-    "User not found": "Utilisateur introuvable",
-    "Invalid password": "Mot de passe incorrect",
+    "Invalid credentials": "Email ou mot de passe incorrect",
+    "User not found": "Email ou mot de passe incorrect", // Ne pas révéler si l'email existe
+    "Invalid password": "Email ou mot de passe incorrect", // Ne pas révéler si le mot de passe est faux
 
     // Erreurs d'email
     "Email already exists": "Cet email est déjà utilisé",
