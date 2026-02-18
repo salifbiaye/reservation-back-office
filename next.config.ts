@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     experimental: {
         optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
     },
+    productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

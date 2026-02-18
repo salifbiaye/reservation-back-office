@@ -26,7 +26,7 @@ export async function getCalendarData() {
           },
         },
       },
-      orderBy: { name: "asc" },
+      orderBy: { createdAt: "asc" },
     })
 
     // Get reservations based on role
